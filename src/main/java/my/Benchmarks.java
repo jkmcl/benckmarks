@@ -22,12 +22,12 @@ public class Benchmarks {
 			.withZone(ZoneId.systemDefault());
 
 	@Benchmark
-	public String formateInstantWithDateTimeFormatter() {
+	public String formatInstantWithDateTimeFormatter() {
 		return dtf.format(Instant.now());
 	}
 
 	@Benchmark
-	public String formateDateWithDateTimeFormatter() {
+	public String formatDateWithDateTimeFormatter() {
 		return dtf.format((new Date()).toInstant());
 	}
 
