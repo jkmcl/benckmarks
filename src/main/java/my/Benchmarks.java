@@ -1,9 +1,6 @@
 package my;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -22,21 +19,17 @@ public class Benchmarks {
 
 	@Benchmark
 	public String formatDateWithSimpleDateFormat(ThreadState state) {
-		return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")).format(state.date);
-	}
-
-	// DateTimeFormatter is thread-safe
-	private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSS")
-			.withZone(ZoneId.systemDefault());
-
-	@Benchmark
-	public String formatInstantWithDateTimeFormatter(ThreadState state) {
-		return dtf.format(state.instant);
+		return TimeFormatter.formatDateWithSimpleDateFormat(state.date);
 	}
 
 	@Benchmark
 	public String formatDateWithDateTimeFormatter(ThreadState state) {
-		return dtf.format(state.date.toInstant());
+		return TimeFormatter.formatDateWithDateTimeFormatter(state.date);
+	}
+
+	@Benchmark
+	public String formatInstantWithDateTimeFormatter(ThreadState state) {
+		return TimeFormatter.formatInstantWithDateTimeFormatter(state.instant);
 	}
 
 }
