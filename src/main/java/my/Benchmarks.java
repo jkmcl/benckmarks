@@ -8,13 +8,21 @@ import java.util.Date;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
 
 @Fork(1)
 public class Benchmarks {
 
+	@State(Scope.Thread)
+	public static class ThreadState {
+		public Instant instant = Instant.now();
+		public Date date = Date.from(instant);
+	}
+
 	@Benchmark
-	public String formatDateWithSimpleDateFormat() {
-		return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")).format(new Date());
+	public String formatDateWithSimpleDateFormat(ThreadState state) {
+		return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")).format(state.date);
 	}
 
 	// DateTimeFormatter is thread-safe
@@ -22,13 +30,13 @@ public class Benchmarks {
 			.withZone(ZoneId.systemDefault());
 
 	@Benchmark
-	public String formatInstantWithDateTimeFormatter() {
-		return dtf.format(Instant.now());
+	public String formatInstantWithDateTimeFormatter(ThreadState state) {
+		return dtf.format(state.instant);
 	}
 
 	@Benchmark
-	public String formatDateWithDateTimeFormatter() {
-		return dtf.format((new Date()).toInstant());
+	public String formatDateWithDateTimeFormatter(ThreadState state) {
+		return dtf.format(state.date.toInstant());
 	}
 
 }
